@@ -39,6 +39,22 @@ postorder :: BST -> [Key]
 postorder Nil = []
 postorder (Node a l r) = (postorder l) ++ (postorder r) ++ [a]
 
+-- | Minimum of a BST
+treeMinimum :: BST -> Key
+treeMinimum Nil = undefined
+treeMinimum (Node a Nil _) = a
+treeMinimum (Node _ l _) = treeMinimum l
+
+-- | Maximum of a BST
+treeMaximum :: BST -> Key
+treeMaximum Nil = undefined
+treeMaximum (Node a _ Nil ) = a
+treeMaximum (Node _ _ r) = treeMaximum r
+
+-- | Find predecessor of an element
+
+-- | Find successor of an element
+
 -- | Insertion
 
 -- | Deletion
