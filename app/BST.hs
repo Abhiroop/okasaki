@@ -2,9 +2,7 @@ module BST where
 
 type Key = Int -- for experimentation purposes only
 
-data BST = Nil | Node Key BST BST deriving Show
-
-
+data BST = Nil | Node Key BST BST deriving (Show, Eq)
 
 key :: BST -> Key
 key Nil = undefined
@@ -100,8 +98,32 @@ insert k (Node a l r)
   | otherwise = insert k r
 
 -- | Deletion
+delete :: Key -> BST -> BST
+delete k Nil = Nil
+delete k x@(Node a l r)
+  | (k < a) = delete k l
+  | (k > a) = delete k r
+  | (k == a) = delete' k x
+
+delete' :: Key -> BST -> BST
+delete' k (Node a l r)
+  | (l == Nil)  = r
+  | (r == Nil)  = l
+  | otherwise    = let (k,t) = maxAndDelete l
+                    in Node k t r
+
+-- This function finds the maximum and then deletes the node as well
+maxAndDelete :: BST -> (Key,BST)
+maxAndDelete t = let m = treeMaximum t
+                  in (m,delete m t)
 
 -- | Merging
+merge :: BST -> BST -> BST
+merge Nil Nil = Nil
+merge a Nil = a
+merge Nil a = a
+merge a b = let finalList = (inorder a) ++ (inorder b)
+             in foldr insert Nil finalList
 
 -- | Balancing
 
@@ -121,3 +143,5 @@ x = (Node 10
      (Node 12
        (Node 11 Nil Nil)
        (Node 13 Nil Nil)))
+
+y = Node 3 (Node 1 Nil Nil) (Node 2 Nil Nil)
