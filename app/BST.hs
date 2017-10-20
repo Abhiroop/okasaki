@@ -5,6 +5,7 @@ type Key = Int -- for experimentation purposes only
 data BST = Nil | Node Key BST BST deriving Show
 
 
+
 key :: BST -> Key
 key Nil = undefined
 key (Node a _ _) = a
@@ -93,6 +94,10 @@ keyP (Node1 a _ _ _) = a
 -- | Insertion
 insert :: Key -> BST -> BST
 insert k Nil = (Node k Nil Nil)
+insert k (Node a l r)
+  | (k == a)  = (Node a l r)
+  | k < a     = insert k l
+  | otherwise = insert k r
 
 -- | Deletion
 
