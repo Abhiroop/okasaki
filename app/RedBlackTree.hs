@@ -45,6 +45,10 @@ balance B a x (T R (T R b y c) z d) = T R (T B a x b) y (T B c z d)
 balance B a x (T R b y (T R c z d)) = T R (T B a x b) y (T B c z d)
 balance color a x b = T color a x b
 
+-- This is simple helper to reduce typing
+balance' :: Set a -> Set a
+balance' (T color left value right) = balance color left value right
+
 -- | Deletion
 delete :: a -> Set a -> Set a
 delete x t = makeBlack $ del x t
@@ -58,7 +62,10 @@ delL :: a -> Set a -> Set a
 delL = undefined
 
 balL :: Set a -> Set a
-balL = undefined
+balL (T B (T R t1 x t2) y t3) = T R (T B t1 x t2) y t3
+balL (T B t1@(T B _ _ _) y (T B t2 z t3)) = (T B t1 y (balance'(T R t2 z t3)))
+balL (T B t1 y (T R (T B t2 u t3) z t4@(T B l value r))) =
+  T R (T B t1 y t2) u (T B t3 z (balance' (T R l value r)))
 
 delR :: Set a -> Set a
 delR = undefined
