@@ -86,10 +86,26 @@ delR x t@(T B t1 y t2) = balR $ T B t1 y (del x t2)
 delR x t@(T R t1 y t2) = T R t1 y (del x t2)
 
 balR :: Set a -> Set a
-balR = undefined
+balR (T B t1 y (T R t2 x t3)) = T R t1 y (T B t2 x t3)
+balR (T B (T B t1 z t2) y t3) = balance' (T B (T R t1 z t2) y t3)       -- t3 root is black in both the last cases because red is handled at the top
+balR (T B (T R t1@(T B l value r) z (T B t2 u t3)) y t4) =
+  T R (balance' (T B (T R l value r) z t2)) u (T B t3 y t4)
 
 fuse :: Set a -> Set a -> Set a
-fuse _ _ = E
+fuse E t = t
+fuse t E = t
+fuse t1@(T B _ _ _) (T R t3 y t4) = T R (fuse t1 t3) y t4
+fuse (T R t1 x t2) t3@(T B _ _ _) = T R t1 x (fuse t2 t3)
+fuse (T R t1 x t2) (T R t3 y t4)  =
+  let s = fuse t2 t3
+  in case s of
+       (T R s1 z s2) -> (T R (T R t1 x s1) z (T R s2 y t4))
+       (T B _ _ _)   -> (T R t1 x (T R s y t4))
+fuse (T B t1 x t2) (T B t3 y t4)  =
+  let s = fuse t2 t3
+  in case s of
+       (T R s1 z s2) -> (T R (T B t1 x s1) z (T B s2 y t4)) -- consfusing case
+       (T B s1 z s2) -> balL (T B t1 x (T B s y t4))
 
 x :: Set Integer
 x = (T B (T R (T B E 6 E) 7 (T B E 9 E)) 10 (T R (T B E 11 E) 13 (T B E 14 E)))
