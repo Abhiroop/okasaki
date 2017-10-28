@@ -6,9 +6,9 @@ module RedBlackTree
     insert)
 where
 
-data Color = R | B
+data Color = R | B deriving Show
 
-data Tree a = E | T Color (Tree a) a (Tree a)
+data Tree a = E | T Color (Tree a) a (Tree a) deriving Show
 
 -- Invariants
 -- 1. No red node has a red parent
@@ -50,16 +50,25 @@ balance' :: Set a -> Set a
 balance' (T color left value right) = balance color left value right
 
 -- | Deletion
-delete :: a -> Set a -> Set a
+delete :: (Ord a) => a -> Set a -> Set a
 delete x t = makeBlack $ del x t
   where makeBlack (T _ a x b) = T B a x b
+        makeBlack E           = E
 
 -- Delete with consecutive red nodes at the top which is rectified in delete
-del :: a -> Set a -> Set a
-del = undefined
+del :: (Ord a) => a -> Set a -> Set a
+del x t@(T _ l y r)
+  | x < y = delL x t
+  | x > y = delR x t
+  | otherwise = fuse l r
 
-delL :: a -> Set a -> Set a
-delL = undefined
+-- We are in the current node and about to traverse in the left child
+-- We have 2 options
+-- 1. If it(the ccurent node i.e t) is black delelte from t1 and then balance.
+-- 2. If it is red delete from t1 and no need to balance because there are no cases
+delL :: (Ord a) => a -> Set a -> Set a
+delL x t@(T B t1 y t2) = balL $ T B (del x t1) y t2
+delL x t@(T R t1 y t2) = T R (del x t1) y t2
 
 balL :: Set a -> Set a
 balL (T B (T R t1 x t2) y t3) = T R (T B t1 x t2) y t3
@@ -67,8 +76,20 @@ balL (T B t1@(T B _ _ _) y (T B t2 z t3)) = (T B t1 y (balance'(T R t2 z t3)))
 balL (T B t1 y (T R (T B t2 u t3) z t4@(T B l value r))) =
   T R (T B t1 y t2) u (T B t3 z (balance' (T R l value r)))
 
-delR :: Set a -> Set a
-delR = undefined
 
-fuse :: Set a -> Set a
-fuse = undefined
+-- We are in the current node and about to traverse in the right child
+-- We have 2 options
+-- 1. If it(the ccurent node i.e t) is black delelte from t2 and then balance.
+-- 2. If it is red delete from t2 and no need to balance because there are no cases
+delR :: (Ord a) => a -> Set a -> Set a
+delR x t@(T B t1 y t2) = balR $ T B t1 y (del x t2)
+delR x t@(T R t1 y t2) = T R t1 y (del x t2)
+
+balR :: Set a -> Set a
+balR = undefined
+
+fuse :: Set a -> Set a -> Set a
+fuse _ _ = E
+
+x :: Set Integer
+x = (T B (T R (T B E 6 E) 7 (T B E 9 E)) 10 (T R (T B E 11 E) 13 (T B E 14 E)))
