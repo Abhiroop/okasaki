@@ -72,7 +72,7 @@ delL x t@(T R t1 y t2) = T R (del x t1) y t2
 
 balL :: Set a -> Set a
 balL (T B (T R t1 x t2) y t3) = T R (T B t1 x t2) y t3
-balL (T B t1@(T B _ _ _) y (T B t2 z t3)) = (T B t1 y (balance'(T R t2 z t3)))
+balL (T B t1 y (T B t2 z t3)) = balance' (T B t1 y (T R t2 z t3))      -- t1 root is black in both the last cases because red is handled at the top
 balL (T B t1 y (T R (T B t2 u t3) z t4@(T B l value r))) =
   T R (T B t1 y t2) u (T B t3 z (balance' (T R l value r)))
 
