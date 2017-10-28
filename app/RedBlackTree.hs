@@ -106,6 +106,3 @@ fuse (T B t1 x t2) (T B t3 y t4)  =
   in case s of
        (T R s1 z s2) -> (T R (T B t1 x s1) z (T B s2 y t4)) -- consfusing case
        (T B s1 z s2) -> balL (T B t1 x (T B s y t4))
-
-x :: Set Integer
-x = (T B (T R (T B E 6 E) 7 (T B E 9 E)) 10 (T R (T B E 11 E) 13 (T B E 14 E)))
