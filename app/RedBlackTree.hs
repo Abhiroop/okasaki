@@ -51,7 +51,7 @@ balance' (T color left value right) = balance color left value right
 -- | Deletion
 delete :: (Ord a) => a -> Tree a -> Tree a
 delete x t = makeBlack $ del x t
-  where makeBlack (T _ a x b) = T B a x b
+  where makeBlack (T _ a y b) = T B a y b
         makeBlack E           = E
 
 -- Delete with consecutive red nodes at the top which is rectified in delete
