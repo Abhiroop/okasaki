@@ -3,9 +3,8 @@ module FloydWarshall where
 import Data.IntMap.Strict as Map hiding (foldl',foldr)
 import Data.List
 
---| This isn't a purely functional data structure. But contains a purely functional implementation
-    of the Floyd Warshall's shortest path algorithm. The representation of the graph is a map of
-    each node to a map of its adjacent node to its weight.
+-- This isn't a purely functional data structure. But contains a purely functional implementation of the Floyd Warshall's shortest path algorithm.
+-- The representation of the graph is a map of each node to a map of its adjacent node to its weight.
 
 type Vertex = Int
 type Weight = Int
