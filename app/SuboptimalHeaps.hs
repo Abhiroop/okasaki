@@ -1,10 +1,9 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE ViewPatterns #-}
-module SuboptimalHeaps where
+module Heap where
 
 import Data.List.Ordered
-import Prelude as P
 
 class Heap t a where
     empty :: t a
@@ -20,8 +19,8 @@ instance Ord a => Heap [] a where
   isEmpty (x:xs) = False
   insert x h     = x : h
   minimum []     = Nothing
-  minimum  l     = Just $ P.minimum l
-  extract h      = let min = SuboptimalHeaps.minimum h
+  minimum  l     = Just $ Prelude.minimum l
+  extract h      = let min = Heap.minimum h
                     in (min, removeItem min h)
 
 removeItem :: Eq a => Maybe a -> [a] -> [a]
@@ -43,7 +42,7 @@ instance Ord a => Heap OrderedList a where
   insert x l             = OrderedList $ insertBag x (unwrap l)
   minimum (unwrap -> []) = Nothing
   minimum l              = Just $ head $ unwrap l
-  extract l              = (SuboptimalHeaps.minimum l, OrderedList $ drop 1 (unwrap l))
+  extract l              = (Heap.minimum l, OrderedList $ drop 1 (unwrap l))
 
 
 listHeap :: Ord a => [a] -> [a] -> [a]
