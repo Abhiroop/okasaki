@@ -17,7 +17,7 @@ snoc x (Queue front rear) = Queue front (x:rear)
 head :: Queue a -> Maybe a
 head (Queue [] []) = Nothing
 head (Queue [] rear) = head (Queue (reverse rear) [])
-head (Queue (x:xs) rear) = Just x
+head (Queue (x:xs) _) = Just x
 
 
 extract :: Queue a -> (Maybe a, Queue a)
