@@ -6,6 +6,8 @@ module SuboptimalHeaps where
 import Data.List.Ordered
 import Prelude as P
 
+-- | These are suboptimal implementations of Heap using Lists and unordered Lists, to demonstrate certain performance characteristics of the various data structures.
+
 class Heap t a where
     empty :: t a
     isEmpty :: t a -> Bool
