@@ -1,7 +1,7 @@
 name:                okasaki
 version:             0.1.0.0
--- synopsis:
--- description:
+synopsis:            Purely Functional Data Structures
+description:         This is an experimental package, currently not suitable for produnction use. It contains a set of purely functional data structures.
 homepage:            https://github.com/Abhiroop/okasaki#readme
 license:             BSD3
 license-file:        LICENSE
