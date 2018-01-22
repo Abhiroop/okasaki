@@ -1,23 +1,21 @@
 module BST where
 
-type Key = Int -- for experimentation purposes only
+data BST a = Nil | Node a (BST a) (BST a) deriving (Show, Eq)
 
-data BST = Nil | Node Key BST BST deriving (Show, Eq)
-
-key :: BST -> Key
+key :: BST a -> a
 key Nil = undefined
 key (Node a _ _) = a
 
-left :: BST -> BST
+left :: BST a -> BST a
 left Nil = Nil
 left (Node _ l _) = l
 
-right :: BST -> BST
+right :: BST a -> BST a
 right Nil = Nil
 right (Node _ _ r) = r
 
 -- | Search returning boolean
-search :: BST -> Key -> Bool
+search :: (Ord a) => BST a -> a -> Bool
 search Nil _ = False
 search (Node a l r) k
   | a == k    = True
@@ -25,7 +23,7 @@ search (Node a l r) k
   | otherwise = search l k
 
 -- | Search returning the tree
-searchT :: BST -> Key -> BST
+searchT :: (Ord a) => BST a -> a -> BST a
 searchT Nil _ = Nil
 searchT x@(Node a l r) k
   | a == k    = x
@@ -34,28 +32,28 @@ searchT x@(Node a l r) k
 
 
 -- | In order traversal
-inorder :: BST -> [Key]
+inorder :: BST a -> [a]
 inorder Nil = []
 inorder (Node a l r) = (inorder l) ++ [a] ++ (inorder r)
 
 -- | Preorder traversal
-preorder :: BST -> [Key]
+preorder :: BST a -> [a]
 preorder Nil          = []
 preorder (Node a l r) = [a] ++ (preorder l) ++ (preorder r)
 
 -- | Postorder traversal
-postorder :: BST -> [Key]
+postorder :: BST a -> [a]
 postorder Nil          = []
 postorder (Node a l r) = (postorder l) ++ (postorder r) ++ [a]
 
--- | Minimum of a BST
-treeMinimum :: BST -> Key
+-- | Minimum of a BST a
+treeMinimum :: BST a -> a
 treeMinimum Nil            = undefined
 treeMinimum (Node a Nil _) = a
 treeMinimum (Node _ l _)   = treeMinimum l
 
--- | Maximum of a BST
-treeMaximum :: BST -> Key
+-- | Maximum of a BST a
+treeMaximum :: BST a -> a
 treeMaximum Nil             = undefined
 treeMaximum (Node a _ Nil ) = a
 treeMaximum (Node _ _ r)    = treeMaximum r
@@ -66,31 +64,31 @@ type Parent = BstP
 type LChild = BstP
 type RChild = BstP
 
-data BstP = None | Node1 Key Parent LChild RChild deriving Show
+data BstP a = None | Node1 a (Parent a) (LChild a) (RChild a) deriving Show
 
-predecessor :: BstP -> Key
+predecessor ::(Ord a) => BstP a -> a
 predecessor None               = undefined
 predecessor (Node1 a p None _) = findPredAncestor a p
 predecessor (Node1 a _ l _)    = treeMaximumP l
 
-treeMaximumP :: BstP -> Key
+treeMaximumP :: BstP a -> a
 treeMaximumP  None               = undefined
 treeMaximumP (Node1 a _ _ None ) = a
 treeMaximumP (Node1 _ _ _ r)     = treeMaximumP r
 
-findPredAncestor :: Key -> BstP -> Key
+findPredAncestor :: (Ord a) => a -> BstP a -> a
 findPredAncestor k (Node1 a p l r)
   | (keyP r) == k = a
   | otherwise = findPredAncestor a p
 
-keyP :: BstP -> Key
+keyP :: BstP a -> a
 keyP  None           = undefined
 keyP (Node1 a _ _ _) = a
 
 -- | Find successor of an element
 
 -- | Insertion
-insert :: Key -> BST -> BST
+insert :: Ord a => a -> BST a -> BST a
 insert k Nil = (Node k Nil Nil)
 insert k (Node a l r)
   | (k == a)  = (Node a l r)
@@ -98,14 +96,14 @@ insert k (Node a l r)
   | otherwise = insert k r
 
 -- | Deletion
-delete :: Key -> BST -> BST
+delete :: Ord a => a -> BST a -> BST a
 delete k Nil = Nil
 delete k x@(Node a l r)
   | (k < a) = delete k l
   | (k > a) = delete k r
   | (k == a) = delete' k x
 
-delete' :: Key -> BST -> BST
+delete' :: (Ord a) => a -> BST a -> BST a
 delete' k (Node a l r)
   | (l == Nil)  = r
   | (r == Nil)  = l
@@ -113,12 +111,12 @@ delete' k (Node a l r)
                     in Node k t r
 
 -- This function finds the maximum and then deletes the node as well
-maxAndDelete :: BST -> (Key,BST)
+maxAndDelete :: (Ord a) => BST a -> (a,BST a)
 maxAndDelete t = let m = treeMaximum t
                   in (m,delete m t)
 
 -- | Merging
-merge :: BST -> BST -> BST
+merge :: (Ord a) => BST a -> BST a -> BST a
 merge Nil Nil = Nil
 merge a Nil = a
 merge Nil a = a
@@ -135,7 +133,7 @@ merge a b = let finalList = (inorder a) ++ (inorder b)
 7   9  11   13
 -}
 
-x :: BST
+x :: BST Integer
 x = (Node 10
      (Node 8
        (Node 7 Nil Nil)
