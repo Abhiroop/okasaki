@@ -16,7 +16,7 @@ A Library of purely functional data structures.
 - [x] Queue
 - [x] Double ended Queue
 - [x] A purely functional graph with Floyd Warshall
-- [x] Profunctor Lenses (will be merged later)-> https://github.com/Abhiroop/opto
+- [x] Profunctor Lenses (not really a data structure, will be merged later)-> https://github.com/Abhiroop/opto
 - [ ] Leftist Heap
 - [ ] IntMap
 - [ ] Finger Trees
