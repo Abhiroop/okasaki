@@ -20,7 +20,8 @@ library
                        RedBlackTree,
                        LeftistHeap,
                        BinaryHeap,
-                       Deque
+                       Deque,
+                       Graph
   build-depends:       base >= 4.7 && < 5,
                        containers >= 0.5.7.1,
                        data-ordlist
