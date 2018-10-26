@@ -1,10 +1,13 @@
-module Graph(Graph, dfs, bfs) where
+module Graph (Graph, dfs, bfs) where
 
-import Control.Monad(msum)
+import Data.Foldable (asum)
 
 import Data.List(find)
+
 -- https://monadmadness.wordpress.com/2014/11/10/purely-functional-graph-search-algorithms/
 
+
+-- This denotes a connected graph
 data Graph a = Node { label :: a
                     , connections :: [Graph a]
                     } deriving (Show)
@@ -16,9 +19,9 @@ prune g = prune' [] g
           else Node x (map (prune' (x:ps)) xs)
 
 dfs :: (a -> Bool) -> Graph a -> Maybe [a]
-dfs p (Node x xs) = if p x
-    then Just [x]
-    else fmap (x:) . msum . map (dfs p) $ xs
+dfs p (Node x xs)
+  | p x = Just [x]
+  | otherwise = fmap (x:) . asum . map (dfs p) $ xs
 
 bfs :: (a -> Bool) -> Graph a -> Maybe [a]
 bfs p = find (p . last) . rankedPaths
@@ -32,3 +35,12 @@ bfs p = find (p . last) . rankedPaths
         mergeRanked (x:xs) (y:ys) = if length x < length y
             then x : (mergeRanked xs (y:ys))
             else y : (mergeRanked (x:xs) ys)
+
+-- A general unconnected graph
+type Graph1 a = [Graph a]
+
+dfs1 :: (a -> Bool) -> Graph1 a -> Maybe [a]
+dfs1 p = asum . map (dfs p)
+
+bfs1 :: (a -> Bool) -> Graph1 a -> Maybe [a]
+bfs1 p = asum . map (bfs p)
