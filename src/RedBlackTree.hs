@@ -56,6 +56,7 @@ delete x t = makeBlack $ del x t
 
 -- Delete with consecutive red nodes at the top which is rectified in delete
 del :: (Ord a) => a -> Tree a -> Tree a
+del _ E = E
 del x t@(T _ l y r)
   | x < y = delL x t
   | x > y = delR x t
@@ -65,9 +66,9 @@ del x t@(T _ l y r)
 -- We have 2 options
 -- 1. If it(the ccurent node i.e t) is black delelte from t1 and then balance.
 -- 2. If it is red delete from t1 and no need to balance because there are no cases
-delL :: (Ord a) => a -> Tree a -> Tree a
-delL x t@(T B t1 y t2) = balL $ T B (del x t1) y t2
-delL x t@(T R t1 y t2) = T R (del x t1) y t2
+delL :: Ord a => a -> Tree a -> Tree a
+delL x (T _ t1@(T B _ _ _) y t2) = balL $ T B (del x t1) y t2
+delL x (T _ t1 y t2) = T R (del x t1) y t2
 
 balL :: Tree a -> Tree a
 balL (T B (T R t1 x t2) y t3) = T R (T B t1 x t2) y t3
@@ -80,14 +81,14 @@ balL (T B t1 y (T R (T B t2 u t3) z t4@(T B l value r))) =
 -- We have 2 options
 -- 1. If it(the ccurent node i.e t) is black delelte from t2 and then balance.
 -- 2. If it is red delete from t2 and no need to balance because there are no cases
-delR :: (Ord a) => a -> Tree a -> Tree a
-delR x t@(T B t1 y t2) = balR $ T B t1 y (del x t2)
-delR x t@(T R t1 y t2) = T R t1 y (del x t2)
+delR :: Ord a => a -> Tree a -> Tree a
+delR x (T _ t1 y t2@(T B _ _ _)) = balR $ T B t1 y (del x t2)
+delR x (T _ t1 y t2) = T R t1 y (del x t2)
 
 balR :: Tree a -> Tree a
 balR (T B t1 y (T R t2 x t3)) = T R t1 y (T B t2 x t3)
 balR (T B (T B t1 z t2) y t3) = balance' (T B (T R t1 z t2) y t3)       -- t3 root is black in both the last cases because red is handled at the top
-balR (T B (T R t1@(T B l value r) z (T B t2 u t3)) y t4) =
+balR (T B (T R (T B l value r) z (T B t2 u t3)) y t4) =
   T R (balance' (T B (T R l value r) z t2)) u (T B t3 y t4)
 
 fuse :: Tree a -> Tree a -> Tree a
