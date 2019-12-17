@@ -6,9 +6,9 @@ module RedBlackTree
     insert)
 where
 
-data Color = R | B deriving Show
+data Color = R | B deriving (Show, Eq)
 
-data Tree a = E | T Color (Tree a) a (Tree a) deriving Show
+data Tree a = E | T Color (Tree a) a (Tree a) deriving (Show, Eq)
 
 -- Invariants
 -- 1. No red node has a red parent
